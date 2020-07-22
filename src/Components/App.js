@@ -1,17 +1,16 @@
 import React from 'react';
-import 'bulma/css/bulma.css';
+import { Route, Switch } from 'react-router-dom';
 
-export default props => {
+import Home from './Home';
+import Blogs from './Blogs';
+
+export default () => {
   return (
-    <section class="hero is-primary is-fullheight is-bold">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">Hey there! Welcome to blogarap.</h1>
-          <button class="button is-primary is-inverted is-outlined">
-            Get started.
-          </button>
-        </div>
-      </div>
-    </section>
+    <div className="hero is-dark is-fullheight is-bold">
+      <Switch>
+        <Route component={Home} exact path="/" />
+        <Route component={Blogs} path="/blogs" />
+      </Switch>
+    </div>
   );
 };
