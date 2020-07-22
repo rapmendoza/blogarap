@@ -7,7 +7,8 @@ export default () => {
       <div className="container">
         <h1 className="title">
           Hey there! Welcome to{' '}
-          <span class="has-text-weight-bold	has-text-warning">blogarap</span>.
+          <span className="has-text-weight-bold	has-text-warning">blogarap</span>
+          .
         </h1>
         <Link to="/blogs" className="button is-dark is-inverted is-outlined">
           Get Started.
