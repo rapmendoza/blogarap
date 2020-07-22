@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Blog from './blog';
-import CreateModal from './create';
+import Create from './Forms/create';
 
 export default class extends Component {
   state = {
@@ -34,7 +34,7 @@ export default class extends Component {
             >
               New
             </button>
-            <CreateModal
+            <Create
               active={displayCreateBlog}
               onToggle={this.handleToggleModal}
             />

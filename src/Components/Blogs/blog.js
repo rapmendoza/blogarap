@@ -7,7 +7,7 @@ const blog = ({ blog }) => {
         <p className="title has-text-black">{blog.title}</p>
         <p className="subtitle has-text-dark">by {blog.author}</p>
         <div className="content">
-          <p>{blog.text}</p>
+          <p>{blog.content}</p>
         </div>
       </article>
     </div>
