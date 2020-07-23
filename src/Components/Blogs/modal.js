@@ -8,24 +8,20 @@ export default class extends Component {
   };
 
   componentDidMount() {
-    const { id } = this.props;
+    const { id, blogs } = this.props;
 
     if (this.props.id) {
       this.setState({ isLoading: true });
 
-      fetch(
-        `https://my-json-server.typicode.com/rapmendoza/blogarap/blogs/${id}`
-      )
-        .then(response => response.json())
-        .then(blog => {
-          setTimeout(() => {
-            this.setState({
-              title: blog.title,
-              content: blog.content,
-              isLoading: false,
-            });
-          }, 1500);
+      const blog = blogs.find(x => x.id === id);
+
+      setTimeout(() => {
+        this.setState({
+          title: blog.title,
+          content: blog.content,
+          isLoading: false,
         });
+      }, 1500);
     }
   }
 
@@ -46,25 +42,19 @@ export default class extends Component {
     data.set('id', ++lastId);
     data.set('author', 'guest');
 
-    fetch('https://my-json-server.typicode.com/rapmendoza/blogarap/blogs', {
-      method: 'POST',
-      body: JSON.stringify({
-        id: parseInt(data.get('id')),
-        author: data.get('author'),
-        title: data.get('title'),
-        content: data.get('content'),
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then(response => response.json())
-      .then(blog => {
-        this.props.handleCreate(blog);
-        this.setState({ isLoading: false });
-        form.reset();
-        this.props.onToggle();
-      });
+    data = {
+      id: parseInt(data.get('id')),
+      author: data.get('author'),
+      title: data.get('title'),
+      content: data.get('content'),
+    };
+
+    setTimeout(() => {
+      this.props.handleCreate(data);
+      this.setState({ isLoading: false });
+      form.reset();
+      this.props.onToggle();
+    }, 1500);
   };
 
   handleEdit = event => {
@@ -81,23 +71,12 @@ export default class extends Component {
       content: data.get('content'),
     };
 
-    fetch(
-      `https://my-json-server.typicode.com/rapmendoza/blogarap/blogs/${id}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      }
-    )
-      .then(response => response.json())
-      .then(blog => {
-        this.props.handleEdit(data);
-        this.setState({ isLoading: false });
-        form.reset();
-        this.props.onToggle();
-      });
+    setTimeout(() => {
+      this.props.handleEdit(data);
+      this.setState({ isLoading: false });
+      form.reset();
+      this.props.onToggle();
+    }, 1500);
   };
 
   handleLoader = () => {
