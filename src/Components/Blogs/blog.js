@@ -1,6 +1,6 @@
 import React from 'react';
 
-const blog = ({ blog }) => {
+export default ({ blog }) => {
   return (
     <div className="tile is-ancestor">
       <div className="tile is-parent is-12">
@@ -15,5 +15,3 @@ const blog = ({ blog }) => {
     </div>
   );
 };
-
-export default blog;

@@ -25,10 +25,8 @@ export default class extends Component {
     });
   };
 
-  handleDisplayUpdate = blog => {
-    this.setState({
-      blogs: [blog, ...this.state.blogs],
-    });
+  handleDisplayUpdate = () => {
+    this.getAllData();
   };
 
   render() {
@@ -56,7 +54,7 @@ export default class extends Component {
             />
           </div>
 
-          {blogs.map((blog, i) => (
+          {blogs.map(blog => (
             <Blog blog={blog} key={blog.id} />
           ))}
         </div>

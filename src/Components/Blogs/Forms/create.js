@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 export default class extends Component {
+  componentDidMount() {
+    document.getElementById('form-create').reset();
+  }
+
   handleSubmit = async event => {
     event.preventDefault();
     let data = new FormData(event.target);
@@ -16,7 +20,7 @@ export default class extends Component {
     await fetch('http://localhost:3001/blogs', {
       method: 'POST',
       body: JSON.stringify({
-        id: data.get('id'),
+        id: parseInt(data.get('id')),
         author: data.get('author'),
         title: data.get('title'),
         content: data.get('content'),
@@ -26,9 +30,7 @@ export default class extends Component {
       },
     })
       .then(response => response.json())
-      .then(blog => {
-        this.props.handler(blog);
-      });
+      .then(blog => this.props.handler());
 
     this.props.onToggle();
   };
@@ -42,8 +44,13 @@ export default class extends Component {
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">Create new blog</p>
+            <button
+              className="delete"
+              aria-label="close"
+              onClick={onToggle}
+            ></button>
           </header>
-          <form onSubmit={this.handleSubmit} validate="true">
+          <form onSubmit={this.handleSubmit} validate="true" id="form-create">
             <section className="modal-card-body">
               <div className="field">
                 <div className="field-body">
@@ -81,9 +88,6 @@ export default class extends Component {
             <footer className="modal-card-foot">
               <button className="button is-link" type="submit">
                 Save
-              </button>
-              <button className="button" onClick={onToggle}>
-                Cancel
               </button>
             </footer>
           </form>
