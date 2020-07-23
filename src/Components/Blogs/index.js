@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import Blog from './blog';
 import Create from './Forms/create';
 
@@ -9,14 +10,24 @@ export default class extends Component {
   };
 
   componentDidMount() {
-    fetch('https://my-json-server.typicode.com/rapmendoza/blogarap/blogs')
+    this.getAllData();
+  }
+
+  getAllData = async () => {
+    await fetch('http://localhost:3001/blogs?_sort=id&_order=desc')
       .then(response => response.json())
       .then(blogs => this.setState({ blogs }));
-  }
+  };
 
   handleToggleModal = () => {
     this.setState({
       displayCreateBlog: !this.state.displayCreateBlog,
+    });
+  };
+
+  handleDisplayUpdate = blog => {
+    this.setState({
+      blogs: [blog, ...this.state.blogs],
     });
   };
 
@@ -26,25 +37,28 @@ export default class extends Component {
     return (
       <section className="section">
         <div className="container">
-          <div className="level">
-            <h1 className="level-left title">Blogs</h1>
-            <button
-              className="level-right button is-primary is-outlined is-pulled-right"
-              onClick={this.handleToggleModal}
-            >
-              New
-            </button>
+          <div className="level is-mobile">
+            <div className="level-left">
+              <h1 className="title">Blogs</h1>
+            </div>
+            <div className="level-right">
+              <button
+                className="button is-primary is-outlined"
+                onClick={this.handleToggleModal}
+              >
+                New
+              </button>
+            </div>
             <Create
               active={displayCreateBlog}
               onToggle={this.handleToggleModal}
+              handler={this.handleDisplayUpdate}
             />
           </div>
 
-          <div className="tile is-ancestor">
-            {blogs.map(blog => (
-              <Blog blog={blog} key={blog.id} />
-            ))}
-          </div>
+          {blogs.map((blog, i) => (
+            <Blog blog={blog} key={blog.id} />
+          ))}
         </div>
       </section>
     );

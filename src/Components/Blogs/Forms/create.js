@@ -1,13 +1,36 @@
 import React, { Component } from 'react';
 
 export default class extends Component {
-  state = {
-    blog: {
-      id: '',
-      title: '',
-      author: 'Guest',
-      content: '',
-    },
+  handleSubmit = async event => {
+    event.preventDefault();
+    let data = new FormData(event.target);
+    let lastId;
+
+    await fetch('http://localhost:3001/blogs?_sort=id&_order=desc')
+      .then(response => response.json())
+      .then(blogs => (lastId = blogs[0].id));
+
+    data.set('id', ++lastId);
+    data.set('author', 'guest');
+
+    await fetch('http://localhost:3001/blogs', {
+      method: 'POST',
+      body: JSON.stringify({
+        id: data.get('id'),
+        author: data.get('author'),
+        title: data.get('title'),
+        content: data.get('content'),
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(blog => {
+        this.props.handler(blog);
+      });
+
+    this.props.onToggle();
   };
 
   render() {
@@ -20,8 +43,8 @@ export default class extends Component {
           <header className="modal-card-head">
             <p className="modal-card-title">Create new blog</p>
           </header>
-          <section className="modal-card-body">
-            <form>
+          <form onSubmit={this.handleSubmit} validate="true">
+            <section className="modal-card-body">
               <div className="field">
                 <div className="field-body">
                   <div className="field">
@@ -30,7 +53,9 @@ export default class extends Component {
                         className="input"
                         type="text"
                         placeholder="Title"
-                        value={this.state.title}
+                        id="title"
+                        name="title"
+                        required
                       />
                     </div>
                   </div>
@@ -43,21 +68,25 @@ export default class extends Component {
                       <textarea
                         className="textarea"
                         placeholder="Content"
-                        value={this.state.content}
+                        id="content"
+                        name="content"
                         style={{ minHeight: '300px' }}
+                        required
                       ></textarea>
                     </div>
                   </div>
                 </div>
               </div>
-            </form>
-          </section>
-          <footer className="modal-card-foot">
-            <button className="button is-link">Save</button>
-            <button className="button" onClick={onToggle}>
-              Cancel
-            </button>
-          </footer>
+            </section>
+            <footer className="modal-card-foot">
+              <button className="button is-link" type="submit">
+                Save
+              </button>
+              <button className="button" onClick={onToggle}>
+                Cancel
+              </button>
+            </footer>
+          </form>
         </div>
       </div>
     );

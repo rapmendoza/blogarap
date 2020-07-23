@@ -17,6 +17,12 @@
       "author": "Donald",
       "title": "The Great Escape",
       "content": "Quisque in odio eu turpis imperdiet semper. Etiam vitae volutpat augue. Quisque dignissim urna sit amet ex convallis mattis. Nam eu efficitur diam. Integer vehicula vulputate eros sed porttitor. Ut et mi leo. Sed eu leo nec sem porta lacinia. Etiam interdum turpis justo, non elementum velit viverra sed. Nunc congue erat sit amet est accumsan mollis. Aliquam porttitor tellus sem, sit amet imperdiet neque elementum scelerisque. Etiam sed arcu a leo sagittis ultricies."
+    },
+    {
+      "id": 4,
+      "title": "foo",
+      "author": "guest",
+      "content": "boom boom pow!"
     }
   ]
 }
