@@ -8,29 +8,28 @@ export default class extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     let data = new FormData(event.target);
-    let lastId;
-
-    await fetch('http://localhost:3001/blogs?_sort=id&_order=desc')
-      .then(response => response.json())
-      .then(blogs => (lastId = blogs[0].id));
+    let lastId = this.props.blogs[0].id;
 
     data.set('id', ++lastId);
     data.set('author', 'guest');
 
-    await fetch('http://localhost:3001/blogs', {
-      method: 'POST',
-      body: JSON.stringify({
-        id: parseInt(data.get('id')),
-        author: data.get('author'),
-        title: data.get('title'),
-        content: data.get('content'),
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
+    await fetch(
+      'https://my-json-server.typicode.com/rapmendoza/blogarap/blogs',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          id: parseInt(data.get('id')),
+          author: data.get('author'),
+          title: data.get('title'),
+          content: data.get('content'),
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }
+    )
       .then(response => response.json())
-      .then(blog => this.props.handler());
+      .then(blog => this.props.handler(blog));
 
     this.props.onToggle();
   };

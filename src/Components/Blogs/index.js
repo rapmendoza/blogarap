@@ -14,7 +14,9 @@ export default class extends Component {
   }
 
   getAllData = async () => {
-    await fetch('http://localhost:3001/blogs?_sort=id&_order=desc')
+    await fetch(
+      'https://my-json-server.typicode.com/rapmendoza/blogarap/blogs?_sort=id&_order=desc'
+    )
       .then(response => response.json())
       .then(blogs => this.setState({ blogs }));
   };
@@ -25,8 +27,13 @@ export default class extends Component {
     });
   };
 
-  handleDisplayUpdate = () => {
-    this.getAllData();
+  handleDisplayUpdate = newBlog => {
+    // this.getAllData();
+    this.setState({
+      blogs: [newBlog, ...this.state.blogs],
+    });
+
+    console.log(this.state.blogs);
   };
 
   render() {
@@ -51,6 +58,7 @@ export default class extends Component {
               active={displayCreateBlog}
               onToggle={this.handleToggleModal}
               handler={this.handleDisplayUpdate}
+              blogs={blogs}
             />
           </div>
 
