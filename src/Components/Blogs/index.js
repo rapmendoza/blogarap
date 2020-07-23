@@ -7,6 +7,7 @@ export default class extends Component {
   state = {
     blogs: [],
     displayCreateBlog: false,
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -18,7 +19,11 @@ export default class extends Component {
       'https://my-json-server.typicode.com/rapmendoza/blogarap/blogs?_sort=id&_order=desc'
     )
       .then(response => response.json())
-      .then(blogs => this.setState({ blogs }));
+      .then(blogs => {
+        setTimeout(() => {
+          this.setState({ blogs, isLoading: false });
+        }, 2000);
+      });
   };
 
   handleToggleModal = () => {
@@ -28,19 +33,16 @@ export default class extends Component {
   };
 
   handleDisplayUpdate = newBlog => {
-    // this.getAllData();
     this.setState({
       blogs: [newBlog, ...this.state.blogs],
     });
-
-    console.log(this.state.blogs);
   };
 
   render() {
-    const { blogs, displayCreateBlog } = this.state;
+    const { blogs, displayCreateBlog, isLoading } = this.state;
 
     return (
-      <section className="section">
+      <section className="section is-loading">
         <div className="container">
           <div className="level is-mobile">
             <div className="level-left">
@@ -65,6 +67,12 @@ export default class extends Component {
           {blogs.map(blog => (
             <Blog blog={blog} key={blog.id} />
           ))}
+
+          {isLoading && (
+            <progress className="progress is-primary" max="100">
+              100%
+            </progress>
+          )}
         </div>
       </section>
     );

@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 
 export default class extends Component {
+  state = {
+    isLoading: false,
+  };
   componentDidMount() {
     document.getElementById('form-create').reset();
   }
 
   handleSubmit = async event => {
     event.preventDefault();
+    const form = event.target;
     let data = new FormData(event.target);
     let lastId = this.props.blogs[0].id;
 
@@ -32,10 +36,17 @@ export default class extends Component {
       .then(blog => this.props.handler(blog));
 
     this.props.onToggle();
+    this.setState({ isLoading: false });
+    form.reset();
+  };
+
+  handleLoader = () => {
+    this.setState({ isLoading: true });
   };
 
   render() {
     const { active, onToggle } = this.props;
+    const { isLoading } = this.state;
 
     return (
       <div className={`modal${active ? ' is-active' : ''}`}>
@@ -44,7 +55,7 @@ export default class extends Component {
           <header className="modal-card-head">
             <p className="modal-card-title">Create new blog</p>
             <button
-              className="delete"
+              className="delete is-medium"
               aria-label="close"
               onClick={onToggle}
             ></button>
@@ -85,7 +96,11 @@ export default class extends Component {
               </div>
             </section>
             <footer className="modal-card-foot">
-              <button className="button is-link" type="submit">
+              <button
+                className={`button is-link${isLoading ? ' is-loading' : ''}`}
+                type="submit"
+                onClick={this.handleLoader}
+              >
                 Save
               </button>
             </footer>
