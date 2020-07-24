@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 
-import Blog from './blog';
-import Modal from './modal';
-import DeleteModal from './delete';
+import Blog from './Blog';
+import CreateModal from './Forms/create';
+import EditModal from './Forms/edit';
+import DeleteModal from './Forms/delete';
 
 export default class extends Component {
   state = {
     blogs: [],
     displayCreateBlog: false,
+    displayEditBlog: false,
     displayDeleteBlog: false,
     isLoading: true,
     selectedBlog: 0,
@@ -27,12 +29,17 @@ export default class extends Component {
       });
   };
 
-  handleToggleModal = id => {
-    const blogID = typeof id === 'number' ? id : null;
-
+  handleToggleCreate = () => {
     this.setState({
       displayCreateBlog: !this.state.displayCreateBlog,
-      selectedBlog: blogID,
+      selectedBlog: null,
+    });
+  };
+
+  handleToggleEdit = id => {
+    this.setState({
+      displayEditBlog: !this.state.displayEditBlog,
+      selectedBlog: id,
     });
   };
 
@@ -51,6 +58,7 @@ export default class extends Component {
     const {
       blogs,
       displayCreateBlog,
+      displayEditBlog,
       displayDeleteBlog,
       isLoading,
       selectedBlog,
@@ -66,8 +74,7 @@ export default class extends Component {
             <div className="level-right">
               <button
                 className="button is-primary is-outlined"
-                onClick={this.handleToggleModal}
-                id={1}
+                onClick={this.handleToggleCreate}
               >
                 New
               </button>
@@ -78,15 +85,21 @@ export default class extends Component {
             <Blog
               blog={blog}
               key={blog.id}
-              handleToggleEdit={() => this.handleToggleModal(blog.id)}
+              handleToggleEdit={() => this.handleToggleEdit(blog.id)}
               handleToggleDelete={() => this.handleToggleDelete(blog.id)}
             />
           ))}
 
-          {displayCreateBlog && (
-            <Modal
-              active={displayCreateBlog}
-              onToggle={this.handleToggleModal}
+          <CreateModal
+            active={displayCreateBlog}
+            onToggle={this.handleToggleCreate}
+            handleResponse={this.handleDisplayUpdate}
+          />
+
+          {displayEditBlog && (
+            <EditModal
+              active={displayEditBlog}
+              onToggle={this.handleToggleEdit}
               handleResponse={this.handleDisplayUpdate}
               id={selectedBlog}
             />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Button from './Button';
 
 export default class extends Component {
   render() {
@@ -11,19 +12,12 @@ export default class extends Component {
             <div className="level is-mobile">
               <p className="level-left title has-text-black">{blog.title}</p>
               <div className="level-right">
-                <button
-                  className="level-item button is-info is-outlined"
-                  onClick={handleToggleEdit}
-                  id={blog.id}
-                >
+                <Button color="is-info" toggle={handleToggleEdit}>
                   Edit
-                </button>
-                <button
-                  className="level-item button is-danger is-outlined"
-                  onClick={handleToggleDelete}
-                >
+                </Button>
+                <Button color="is-danger" toggle={handleToggleDelete}>
                   Delete
-                </button>
+                </Button>
               </div>
             </div>
 
