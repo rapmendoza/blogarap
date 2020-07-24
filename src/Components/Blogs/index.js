@@ -15,15 +15,13 @@ export default class extends Component {
     this.getAllData();
   }
 
-  getAllData = async () => {
-    await fetch(
-      'https://my-json-server.typicode.com/rapmendoza/blogarap/blogs?_sort=id&_order=desc'
-    )
+  getAllData = async (length = 1500) => {
+    await fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
       .then(response => response.json())
       .then(blogs => {
         setTimeout(() => {
           this.setState({ blogs, isLoading: false });
-        }, 1500);
+        }, length);
       });
   };
 
@@ -37,19 +35,21 @@ export default class extends Component {
   };
 
   handleDisplayCreate = newBlog => {
-    this.setState({
-      blogs: [newBlog, ...this.state.blogs],
-    });
+    // this.setState({
+    //   blogs: [newBlog, ...this.state.blogs],
+    // });
+    this.getAllData(0);
   };
 
   handleDisplayUpdate = updatedBlog => {
-    let blogArr = this.state.blogs.map(x => {
-      return x.id === updatedBlog.id ? updatedBlog : x;
-    });
+    this.getAllData(0);
+    // let blogArr = this.state.blogs.map(x => {
+    //   return x.id === updatedBlog.id ? updatedBlog : x;
+    // });
 
-    this.setState({
-      blogs: [...blogArr],
-    });
+    // this.setState({
+    //   blogs: [...blogArr],
+    // });
   };
 
   render() {

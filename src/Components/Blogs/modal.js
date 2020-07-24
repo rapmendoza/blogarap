@@ -49,12 +49,22 @@ export default class extends Component {
       content: data.get('content'),
     };
 
-    setTimeout(() => {
-      this.props.handleCreate(data);
-      this.setState({ isLoading: false });
-      form.reset();
-      this.props.onToggle();
-    }, 1500);
+    fetch('https://blogarap-api.herokuapp.com/blogs', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(blog => {
+        setTimeout(() => {
+          this.props.handleCreate(data);
+          this.setState({ isLoading: false });
+          form.reset();
+          this.props.onToggle();
+        }, 1500);
+      });
   };
 
   handleEdit = event => {
@@ -64,6 +74,7 @@ export default class extends Component {
 
     const { id } = this.props;
     data.set('author', 'guest');
+
     data = {
       id: id,
       author: data.get('author'),
@@ -71,12 +82,24 @@ export default class extends Component {
       content: data.get('content'),
     };
 
-    setTimeout(() => {
-      this.props.handleEdit(data);
-      this.setState({ isLoading: false });
-      form.reset();
-      this.props.onToggle();
-    }, 1500);
+    fetch(`https://blogarap-api.herokuapp.com/blogs/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(blog => {
+        setTimeout(() => {
+          setTimeout(() => {
+            this.props.handleEdit(data);
+            this.setState({ isLoading: false });
+            form.reset();
+            this.props.onToggle();
+          }, 1500);
+        }, 1500);
+      });
   };
 
   handleLoader = () => {
