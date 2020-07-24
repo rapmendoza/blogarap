@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class extends Component {
   componentDidMount() {
@@ -43,12 +44,12 @@ export default class extends Component {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                <a className="button is-light is-outlined" href="/signup">
-                  <strong>Sign up</strong>
-                </a>
-                <a className="button is-light is-outlined" href="/login">
+                <Link to="/signup" className="button is-light is-outlined">
+                  Sign up
+                </Link>
+                <Link to="/login" className="button is-light is-outlined">
                   Log in
-                </a>
+                </Link>
               </div>
             </div>
           </div>
