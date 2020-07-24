@@ -67,19 +67,27 @@ export default class extends Component {
     return (
       <section className="section is-loading">
         <div className="container">
-          <div className="level is-mobile">
-            <div className="level-left">
-              <h1 className="title">Blogs</h1>
+          {isLoading && (
+            <progress className="progress is-primary" max="100">
+              100%
+            </progress>
+          )}
+
+          {!isLoading && (
+            <div className="level is-mobile">
+              <div className="level-left">
+                <h1 className="title">Blogs</h1>
+              </div>
+              <div className="level-right">
+                <button
+                  className="button is-primary is-outlined"
+                  onClick={this.handleToggleCreate}
+                >
+                  New
+                </button>
+              </div>
             </div>
-            <div className="level-right">
-              <button
-                className="button is-primary is-outlined"
-                onClick={this.handleToggleCreate}
-              >
-                New
-              </button>
-            </div>
-          </div>
+          )}
 
           {blogs.map(blog => (
             <Blog
@@ -111,12 +119,6 @@ export default class extends Component {
             handleResponse={this.handleDisplayUpdate}
             id={selectedBlog}
           />
-
-          {isLoading && (
-            <progress className="progress is-primary" max="100">
-              100%
-            </progress>
-          )}
         </div>
       </section>
     );
