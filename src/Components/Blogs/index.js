@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 
 import Blog from './blog';
 import Modal from './modal';
+import DeleteModal from './delete';
 
 export default class extends Component {
   state = {
     blogs: [],
     displayCreateBlog: false,
+    displayDeleteBlog: false,
     isLoading: true,
     selectedBlog: 0,
   };
@@ -34,26 +36,25 @@ export default class extends Component {
     });
   };
 
-  handleDisplayCreate = newBlog => {
-    // this.setState({
-    //   blogs: [newBlog, ...this.state.blogs],
-    // });
-    this.getAllData(0);
+  handleToggleDelete = id => {
+    this.setState({
+      displayDeleteBlog: !this.state.displayDeleteBlog,
+      selectedBlog: id,
+    });
   };
 
-  handleDisplayUpdate = updatedBlog => {
+  handleDisplayUpdate = () => {
     this.getAllData(0);
-    // let blogArr = this.state.blogs.map(x => {
-    //   return x.id === updatedBlog.id ? updatedBlog : x;
-    // });
-
-    // this.setState({
-    //   blogs: [...blogArr],
-    // });
   };
 
   render() {
-    const { blogs, displayCreateBlog, isLoading, selectedBlog } = this.state;
+    const {
+      blogs,
+      displayCreateBlog,
+      displayDeleteBlog,
+      isLoading,
+      selectedBlog,
+    } = this.state;
 
     return (
       <section className="section is-loading">
@@ -77,7 +78,8 @@ export default class extends Component {
             <Blog
               blog={blog}
               key={blog.id}
-              handleToggle={() => this.handleToggleModal(blog.id)}
+              handleToggleEdit={() => this.handleToggleModal(blog.id)}
+              handleToggleDelete={() => this.handleToggleDelete(blog.id)}
             />
           ))}
 
@@ -85,12 +87,17 @@ export default class extends Component {
             <Modal
               active={displayCreateBlog}
               onToggle={this.handleToggleModal}
-              handleCreate={this.handleDisplayCreate}
-              handleEdit={this.handleDisplayUpdate}
-              blogs={blogs}
+              handleResponse={this.handleDisplayUpdate}
               id={selectedBlog}
             />
           )}
+
+          <DeleteModal
+            active={displayDeleteBlog}
+            onToggle={this.handleToggleDelete}
+            handleResponse={this.handleDisplayUpdate}
+            id={selectedBlog}
+          />
 
           {isLoading && (
             <progress className="progress is-primary" max="100">

@@ -8,20 +8,27 @@ export default class extends Component {
   };
 
   componentDidMount() {
-    const { id, blogs } = this.props;
+    const { id } = this.props;
 
     if (this.props.id) {
       this.setState({ isLoading: true });
 
-      const blog = blogs.find(x => x.id === id);
-
-      setTimeout(() => {
-        this.setState({
-          title: blog.title,
-          content: blog.content,
-          isLoading: false,
+      fetch(`https://blogarap-api.herokuapp.com/blogs/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then(response => response.json())
+        .then(blog => {
+          setTimeout(() => {
+            this.setState({
+              title: blog.title,
+              content: blog.content,
+              isLoading: false,
+            });
+          }, 1500);
         });
-      }, 1500);
     }
   }
 
@@ -37,7 +44,13 @@ export default class extends Component {
     event.preventDefault();
     const form = event.target;
     let data = new FormData(event.target);
-    let lastId = this.props.blogs[0].id;
+    let lastId;
+
+    fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
+      .then(response => response.json())
+      .then(blogs => {
+        lastId = blogs[0].id;
+      });
 
     data.set('id', ++lastId);
     data.set('author', 'guest');
@@ -57,9 +70,9 @@ export default class extends Component {
       },
     })
       .then(response => response.json())
-      .then(blog => {
+      .then(() => {
         setTimeout(() => {
-          this.props.handleCreate(data);
+          this.props.handleResponse();
           this.setState({ isLoading: false });
           form.reset();
           this.props.onToggle();
@@ -90,14 +103,12 @@ export default class extends Component {
       },
     })
       .then(response => response.json())
-      .then(blog => {
+      .then(() => {
         setTimeout(() => {
-          setTimeout(() => {
-            this.props.handleEdit(data);
-            this.setState({ isLoading: false });
-            form.reset();
-            this.props.onToggle();
-          }, 1500);
+          this.props.handleResponse();
+          this.setState({ isLoading: false });
+          form.reset();
+          this.props.onToggle();
         }, 1500);
       });
   };
@@ -128,7 +139,6 @@ export default class extends Component {
           <form
             onSubmit={id ? this.handleEdit : this.handleCreate}
             validate="true"
-            id="form-create"
           >
             <section className="modal-card-body">
               {isLoading && (

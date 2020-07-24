@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 export default class extends Component {
   render() {
-    const { blog, handleToggle } = this.props;
+    const { blog, handleToggleEdit, handleToggleDelete } = this.props;
 
     return (
       <div className="tile is-ancestor">
@@ -13,12 +13,15 @@ export default class extends Component {
               <div className="level-right">
                 <button
                   className="level-item button is-info is-outlined"
-                  onClick={handleToggle}
+                  onClick={handleToggleEdit}
                   id={blog.id}
                 >
                   Edit
                 </button>
-                <button className="level-item button is-danger is-outlined">
+                <button
+                  className="level-item button is-danger is-outlined"
+                  onClick={handleToggleDelete}
+                >
                   Delete
                 </button>
               </div>
