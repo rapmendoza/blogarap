@@ -120,7 +120,7 @@ export default class extends Component {
   render() {
     const { active, onToggle, id } = this.props;
     const { isLoading, title, content } = this.state;
-    const modalTitle = id ? 'Edit blog: ' + id : 'Create new blog';
+    const modalTitle = id ? 'Edit blog: ' : 'Create new blog';
     const modalButton = id ? 'Save changes' : 'Save';
 
     return (
@@ -129,12 +129,14 @@ export default class extends Component {
         <div className="modal-card">
           <header className="modal-card-head">
             <p className="modal-card-title">{modalTitle}</p>
-            <button
-              className="delete is-medium"
-              aria-label="close"
-              onClick={onToggle}
-              id={id}
-            ></button>
+            {!isLoading && (
+              <button
+                className="delete is-medium"
+                aria-label="close"
+                onClick={onToggle}
+                id={id}
+              ></button>
+            )}
           </header>
           <form
             onSubmit={id ? this.handleEdit : this.handleCreate}

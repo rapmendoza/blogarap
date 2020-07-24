@@ -24,7 +24,7 @@ export default class extends Component {
   };
 
   render() {
-    const { active, onToggle, id } = this.props;
+    const { active, onToggle } = this.props;
     const { isLoading } = this.state;
 
     return (
@@ -35,24 +35,28 @@ export default class extends Component {
             <p className="modal-card-title">
               Are you sure you want to delete this post?
             </p>
-            <button
-              className="delete is-medium"
-              aria-label="close"
-              onClick={onToggle}
-              id={id}
-            ></button>
           </header>
           <form onSubmit={this.handleDelete}>
-            <section className="modal-card-body"></section>
-            <footer className="modal-card-foot">
-              <button
-                className={`button is-danger${isLoading ? ' is-loading' : ''}`}
-                type="submit"
-                onClick={this.handleLoader}
-              >
-                Delete
-              </button>
-            </footer>
+            <section className="modal-card-body">
+              <div className="level is-mobile">
+                <button
+                  className={`level-item button is-danger${
+                    isLoading ? ' is-loading' : ''
+                  }`}
+                  type="submit"
+                  onClick={this.handleLoader}
+                >
+                  Yes
+                </button>
+                <button
+                  className="level-item button"
+                  type="button"
+                  onClick={onToggle}
+                >
+                  No
+                </button>
+              </div>
+            </section>
           </form>
         </div>
       </div>
