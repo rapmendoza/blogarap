@@ -9,20 +9,9 @@ export default class extends Component {
     event.preventDefault();
     const form = event.target;
     let data = new FormData(event.target);
-    let lastId;
-
-    fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
-      .then(response => response.json())
-      .then(blogs => {
-        lastId = blogs[0].id;
-      });
-
-    data.set('id', ++lastId);
-    data.set('author', 'guest');
 
     data = {
-      id: parseInt(data.get('id')),
-      author: data.get('author'),
+      author: 'guest',
       title: data.get('title'),
       content: data.get('content'),
     };

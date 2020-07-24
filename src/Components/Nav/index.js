@@ -2,8 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
 export default class extends Component {
+  state = {
+    isLoggedIn: false,
+  };
+
   componentDidMount() {
     this.navBarHandler();
+  }
+
+  componentDidUpdate() {
+    this.checkUser();
   }
 
   navBarHandler() {
@@ -25,7 +33,15 @@ export default class extends Component {
     }
   }
 
+  checkUser() {
+    if (sessionStorage.getItem('id')) {
+      this.setState({ isLoggedIn: true });
+    }
+  }
+
   render() {
+    const { isLoggedIn } = this.state;
+
     return (
       <nav className="navbar is-black">
         <div className="navbar-brand">
@@ -43,14 +59,22 @@ export default class extends Component {
         <div id="myBurger" className="navbar-menu">
           <div className="navbar-end">
             <div className="navbar-item">
-              <div className="buttons">
-                <Link to="/signup" className="button is-light is-outlined">
-                  Sign up
-                </Link>
-                <Link to="/login" className="button is-light is-outlined">
-                  Log in
-                </Link>
-              </div>
+              {isLoggedIn ? (
+                <div className="buttons">
+                  <Link to="/signup" className="button is-light is-outlined">
+                    Sign up
+                  </Link>
+                  <Link to="/login" className="button is-light is-outlined">
+                    Log in
+                  </Link>
+                </div>
+              ) : (
+                <div className="buttons">
+                  <Link to="/logout" className="button is-light is-outlined">
+                    Log out
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>

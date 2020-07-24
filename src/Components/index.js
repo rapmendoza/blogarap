@@ -4,8 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import Nav from './Nav';
 import Home from './Home';
 import Blogs from './Blogs';
+import LogIn from './Auth';
 import SignUp from './Auth/signup';
-import LogIn from './Auth/login';
 
 export default () => {
   return (
