@@ -45,9 +45,8 @@ export default class extends Component {
     return (
       <div className="hero is-dark is-fullheight is-bold">
         <Nav />
+        {redirect && <Redirect to="/blogs" />}
         <div className="hero-body">
-          {redirect && <Redirect to="/blogs" />}
-
           <div className="container">
             <div className="columns">
               <div className="column is-one-third">
@@ -60,7 +59,6 @@ export default class extends Component {
                         type="text"
                         placeholder="Username"
                         name="username"
-                        defaultValue="boooom"
                         required
                       />
                     </p>
@@ -72,7 +70,6 @@ export default class extends Component {
                         type="password"
                         placeholder="Password"
                         name="password"
-                        defaultValue="booooooom"
                         required
                       />
                     </p>
