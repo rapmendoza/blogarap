@@ -53,7 +53,7 @@ export default class extends Component {
                 <h1 className="title">Log in</h1>
                 <form validate="true" onSubmit={this.handleSubmit}>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <input
                         className="input"
                         type="text"
@@ -61,10 +61,10 @@ export default class extends Component {
                         name="username"
                         required
                       />
-                    </p>
+                    </div>
                   </div>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <input
                         className="input"
                         type="password"
@@ -72,7 +72,7 @@ export default class extends Component {
                         name="password"
                         required
                       />
-                    </p>
+                    </div>
                   </div>
                   <div className="field">
                     <p className="control">

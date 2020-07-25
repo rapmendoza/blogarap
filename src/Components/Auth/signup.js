@@ -7,9 +7,10 @@ export default class extends Component {
   state = {
     isLoading: false,
     redirect: false,
+    isUsernameTaken: false,
   };
 
-  handleSubmit = event => {
+  handleSubmit = async event => {
     event.preventDefault();
     this.setState({ isLoading: true });
     let data = new FormData(event.target);
@@ -20,6 +21,31 @@ export default class extends Component {
       password: data.get('password'),
     };
 
+    this.checkUser(data);
+  };
+
+  checkUser(data) {
+    const { username } = data;
+
+    fetch(`https://blogarap-api.herokuapp.com/users?username=${username}`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(user => {
+        if (user.length) {
+          this.setState({ isUsernameTaken: true, isLoading: false });
+          return false;
+        } else {
+          this.setState({ isUsernameTaken: false, isLoading: false });
+          this.createUser(data);
+        }
+      });
+  }
+
+  createUser(data) {
     fetch(`https://blogarap-api.herokuapp.com/users`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -33,10 +59,10 @@ export default class extends Component {
         sessionStorage.setItem('name', user.name);
         this.setState({ isLoading: false, redirect: true });
       });
-  };
+  }
 
   render() {
-    const { isLoading, redirect } = this.state;
+    const { isLoading, redirect, isUsernameTaken } = this.state;
 
     return (
       <div className="hero is-dark is-fullheight is-bold">
@@ -49,7 +75,7 @@ export default class extends Component {
                 <h1 className="title">Sign Up</h1>
                 <form validate="true" onSubmit={this.handleSubmit}>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <input
                         className="input"
                         type="text"
@@ -57,10 +83,10 @@ export default class extends Component {
                         name="name"
                         required
                       />
-                    </p>
+                    </div>
                   </div>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <input
                         className="input"
                         type="text"
@@ -68,10 +94,15 @@ export default class extends Component {
                         name="username"
                         required
                       />
-                    </p>
+                      {isUsernameTaken && (
+                        <p className="help is-danger">
+                          Username is already taken
+                        </p>
+                      )}
+                    </div>
                   </div>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <input
                         className="input"
                         type="password"
@@ -79,10 +110,10 @@ export default class extends Component {
                         name="password"
                         required
                       />
-                    </p>
+                    </div>
                   </div>
                   <div className="field">
-                    <p className="control">
+                    <div className="control">
                       <button
                         className={`button is-success${
                           isLoading ? ' is-loading' : ''
@@ -91,7 +122,7 @@ export default class extends Component {
                       >
                         Sign up
                       </button>
-                    </p>
+                    </div>
                   </div>
                 </form>
               </div>
