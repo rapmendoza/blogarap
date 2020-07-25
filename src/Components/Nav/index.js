@@ -42,6 +42,7 @@ export default class extends Component {
 
     setTimeout(() => {
       this.setState({ isLoggedIn: false, isLoading: false });
+      this.props.handleLogoutState();
       sessionStorage.clear();
     }, 1000);
   };

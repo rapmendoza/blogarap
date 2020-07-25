@@ -14,10 +14,12 @@ export default class extends Component {
     displayDeleteBlog: false,
     isLoading: true,
     selectedBlog: 0,
+    isLoggedIn: false,
   };
 
   componentDidMount() {
     this.getAllData();
+    this.checkLoggedInUser();
   }
 
   getAllData = async (length = 1500) => {
@@ -55,6 +57,17 @@ export default class extends Component {
     this.getAllData(0);
   };
 
+  handleLogoutState = () => {
+    console.log('BLOG: handleLogOutStaet');
+    this.setState({ isLoggedIn: false });
+  };
+
+  checkLoggedInUser() {
+    if (sessionStorage.getItem('name')) {
+      this.setState({ isLoggedIn: true });
+    }
+  }
+
   render() {
     const {
       blogs,
@@ -63,11 +76,15 @@ export default class extends Component {
       displayDeleteBlog,
       isLoading,
       selectedBlog,
+      isLoggedIn,
     } = this.state;
 
     return (
       <div className="hero is-dark is-fullheight is-bold">
-        <Nav />
+        <Nav
+          isLoggedIn={isLoggedIn}
+          handleLogoutState={this.handleLogoutState}
+        />
         <section className="section is-loading">
           <div className="container">
             {isLoading && (
@@ -81,14 +98,16 @@ export default class extends Component {
                 <div className="level-left">
                   <h1 className="title">Blogs</h1>
                 </div>
-                <div className="level-right">
-                  <button
-                    className="button is-primary is-outlined"
-                    onClick={this.handleToggleCreate}
-                  >
-                    New
-                  </button>
-                </div>
+                {isLoggedIn && (
+                  <div className="level-right">
+                    <button
+                      className="button is-primary is-outlined"
+                      onClick={this.handleToggleCreate}
+                    >
+                      New
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
