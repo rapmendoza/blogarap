@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 export default class extends Component {
   state = {
     isLoggedIn: false,
+    isLoading: false,
   };
 
   componentDidMount() {
     this.navBarHandler();
-  }
-
-  componentDidUpdate() {
     this.checkUser();
   }
 
@@ -39,8 +37,17 @@ export default class extends Component {
     }
   }
 
+  handleLogout = () => {
+    this.setState({ isLoading: true });
+
+    setTimeout(() => {
+      this.setState({ isLoggedIn: false, isLoading: false });
+      sessionStorage.clear();
+    }, 1000);
+  };
+
   render() {
-    const { isLoggedIn } = this.state;
+    const { isLoggedIn, isLoading } = this.state;
 
     return (
       <nav className="navbar is-black">
@@ -61,17 +68,22 @@ export default class extends Component {
             <div className="navbar-item">
               {isLoggedIn ? (
                 <div className="buttons">
+                  <button
+                    className={`button is-light is-outlined${
+                      isLoading ? ' is-loading' : ''
+                    }`}
+                    onClick={this.handleLogout}
+                  >
+                    Log out
+                  </button>
+                </div>
+              ) : (
+                <div className="buttons">
                   <Link to="/signup" className="button is-light is-outlined">
                     Sign up
                   </Link>
                   <Link to="/login" className="button is-light is-outlined">
                     Log in
-                  </Link>
-                </div>
-              ) : (
-                <div className="buttons">
-                  <Link to="/logout" className="button is-light is-outlined">
-                    Log out
                   </Link>
                 </div>
               )}

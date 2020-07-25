@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import Nav from '../Nav';
 import Blog from './Blog';
 import CreateModal from './Forms/create';
 import EditModal from './Forms/edit';
@@ -65,62 +66,65 @@ export default class extends Component {
     } = this.state;
 
     return (
-      <section className="section is-loading">
-        <div className="container">
-          {isLoading && (
-            <progress className="progress is-primary" max="100">
-              100%
-            </progress>
-          )}
+      <div className="hero is-dark is-fullheight is-bold">
+        <Nav />
+        <section className="section is-loading">
+          <div className="container">
+            {isLoading && (
+              <progress className="progress is-primary" max="100">
+                100%
+              </progress>
+            )}
 
-          {!isLoading && (
-            <div className="level is-mobile">
-              <div className="level-left">
-                <h1 className="title">Blogs</h1>
+            {!isLoading && (
+              <div className="level is-mobile">
+                <div className="level-left">
+                  <h1 className="title">Blogs</h1>
+                </div>
+                <div className="level-right">
+                  <button
+                    className="button is-primary is-outlined"
+                    onClick={this.handleToggleCreate}
+                  >
+                    New
+                  </button>
+                </div>
               </div>
-              <div className="level-right">
-                <button
-                  className="button is-primary is-outlined"
-                  onClick={this.handleToggleCreate}
-                >
-                  New
-                </button>
-              </div>
-            </div>
-          )}
+            )}
 
-          {blogs.map(blog => (
-            <Blog
-              blog={blog}
-              key={blog.id}
-              handleToggleEdit={() => this.handleToggleEdit(blog.id)}
-              handleToggleDelete={() => this.handleToggleDelete(blog.id)}
+            {blogs.map(blog => (
+              <Blog
+                blog={blog}
+                key={blog.id}
+                handleToggleEdit={() => this.handleToggleEdit(blog.id)}
+                handleToggleDelete={() => this.handleToggleDelete(blog.id)}
+              />
+            ))}
+
+            <CreateModal
+              active={displayCreateBlog}
+              onToggle={this.handleToggleCreate}
+              handleResponse={this.handleDisplayUpdate}
             />
-          ))}
 
-          <CreateModal
-            active={displayCreateBlog}
-            onToggle={this.handleToggleCreate}
-            handleResponse={this.handleDisplayUpdate}
-          />
+            {displayEditBlog && (
+              <EditModal
+                active={displayEditBlog}
+                onToggle={this.handleToggleEdit}
+                handleResponse={this.handleDisplayUpdate}
+                id={selectedBlog}
+              />
+            )}
 
-          {displayEditBlog && (
-            <EditModal
-              active={displayEditBlog}
-              onToggle={this.handleToggleEdit}
+            <DeleteModal
+              active={displayDeleteBlog}
+              onToggle={this.handleToggleDelete}
               handleResponse={this.handleDisplayUpdate}
               id={selectedBlog}
             />
-          )}
-
-          <DeleteModal
-            active={displayDeleteBlog}
-            onToggle={this.handleToggleDelete}
-            handleResponse={this.handleDisplayUpdate}
-            id={selectedBlog}
-          />
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
     );
   }
 }
