@@ -7,6 +7,7 @@ export default class extends Component {
   state = {
     isLoading: false,
     redirect: false,
+    isMismatch: false,
   };
 
   handleSubmit = event => {
@@ -31,16 +32,19 @@ export default class extends Component {
         if (user.length) {
           sessionStorage.setItem('id', user[0].id);
           sessionStorage.setItem('name', user[0].name);
-          this.setState({ isLoading: false, redirect: true });
+          this.setState({
+            isLoading: false,
+            isMismatch: false,
+            redirect: true,
+          });
         } else {
-          console.log('User/Password did not match.');
-          this.setState({ isLoading: false });
+          this.setState({ isLoading: false, isMismatch: true });
         }
       });
   };
 
   render() {
-    const { isLoading, redirect } = this.state;
+    const { isLoading, redirect, isMismatch } = this.state;
 
     return (
       <div className="hero is-dark is-fullheight is-bold">
@@ -72,6 +76,11 @@ export default class extends Component {
                         name="password"
                         required
                       />
+                      {isMismatch && (
+                        <p className="help is-danger">
+                          Username and Password did not match.
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div className="field">
