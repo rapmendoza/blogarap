@@ -2,6 +2,20 @@ import React, { Component } from 'react';
 import Button from './Button';
 
 export default class extends Component {
+  handleMouseEnter(e) {
+    const article = e.target;
+
+    article.classList.remove('is-light');
+    article.classList.add('is-white');
+  }
+
+  handleMouseLeave(e) {
+    const article = e.target;
+
+    article.classList.remove('is-white');
+    article.classList.add('is-light');
+  }
+
   render() {
     const {
       blog,
@@ -13,27 +27,42 @@ export default class extends Component {
 
     return (
       <div className="tile is-ancestor">
-        <div className="tile is-parent is-12">
-          <article className="tile is-child box">
-            <div className="level is-mobile">
-              <p className="level-left title has-text-black">{blog.title}</p>
-              {isLoggedIn && canEdit && (
-                <div className="level-right">
-                  <Button color="is-info" toggle={handleToggleEdit}>
-                    Edit
-                  </Button>
-                  <Button color="is-danger" toggle={handleToggleDelete}>
-                    Delete
-                  </Button>
-                </div>
-              )}
-            </div>
+        <div className="tile is-vertical">
+          <div className="tile">
+            <div className="tile is-parent is-vertical">
+              <article
+                className="tile is-child notification is-light"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={this.handleMouseEnter}
+                onMouseLeave={this.handleMouseLeave}
+              >
+                <div className="level is-mobile mb-1">
+                  <p className="level-left title has-text-black">
+                    {blog.title}
+                  </p>
 
-            <p className="subtitle has-text-dark">by {blog.author.name}</p>
-            <div className="content">
-              <p>{blog.content}</p>
+                  {isLoggedIn && canEdit && (
+                    <div className="level-right">
+                      <Button color="is-info" toggle={handleToggleEdit}>
+                        Edit
+                      </Button>
+                      <Button color="is-danger" toggle={handleToggleDelete}>
+                        Delete
+                      </Button>
+                    </div>
+                  )}
+                </div>
+
+                <p className="subtitle has-text-grey is-italic is-size-6 is-capitalized">
+                  by {blog.author.name}
+                </p>
+
+                <div className="content">
+                  <p style={{ whiteSpace: 'pre-wrap' }}>{blog.content}</p>
+                </div>
+              </article>
             </div>
-          </article>
+          </div>
         </div>
       </div>
     );
