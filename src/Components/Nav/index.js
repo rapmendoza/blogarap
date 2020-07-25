@@ -48,11 +48,15 @@ export default class extends Component {
 
   render() {
     const { isLoggedIn, isLoading } = this.state;
+    const name = sessionStorage.getItem('name');
 
     return (
       <nav className="navbar is-black">
         <div className="navbar-brand">
-          <a className="navbar-item" href="/">
+          <a
+            className="navbar-item is-size-4 has-text-weight-semibold"
+            href="/"
+          >
             Blogarap
           </a>
 
@@ -64,9 +68,15 @@ export default class extends Component {
         </div>
 
         <div id="myBurger" className="navbar-menu">
-          <div className="navbar-end">
-            <div className="navbar-item">
-              {isLoggedIn ? (
+          {isLoggedIn ? (
+            <div className="navbar-end">
+              <h1 className="navbar-item">
+                Welcome
+                <span className="is-capitalized has-text-weight-bold">
+                  {`, ${name}`}
+                </span>
+              </h1>
+              <div className="navbar-item">
                 <div className="buttons">
                   <button
                     className={`button is-light is-outlined${
@@ -77,7 +87,11 @@ export default class extends Component {
                     Log out
                   </button>
                 </div>
-              ) : (
+              </div>
+            </div>
+          ) : (
+            <div className="navbar-end">
+              <div className="navbar-item">
                 <div className="buttons">
                   <Link to="/signup" className="button is-light is-outlined">
                     Sign up
@@ -86,9 +100,9 @@ export default class extends Component {
                     Log in
                   </Link>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
     );
