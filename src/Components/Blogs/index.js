@@ -58,7 +58,6 @@ export default class extends Component {
   };
 
   handleLogoutState = () => {
-    console.log('BLOG: handleLogOutStaet');
     this.setState({ isLoggedIn: false });
   };
 
@@ -88,7 +87,7 @@ export default class extends Component {
         <section className="section is-loading">
           <div className="container">
             {isLoading && (
-              <progress className="progress is-primary" max="100">
+              <progress className="progress is-small is-primary" max="100">
                 100%
               </progress>
             )}

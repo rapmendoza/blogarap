@@ -21,7 +21,7 @@ export default class extends Component {
               </div>
             </div>
 
-            <p className="subtitle has-text-dark">by {blog.author}</p>
+            <p className="subtitle has-text-dark">by {blog.author.name}</p>
             <div className="content">
               <p>{blog.content}</p>
             </div>

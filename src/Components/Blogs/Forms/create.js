@@ -11,7 +11,10 @@ export default class extends Component {
     let data = new FormData(event.target);
 
     data = {
-      author: 'guest',
+      author: {
+        id: sessionStorage.getItem('id'),
+        name: sessionStorage.getItem('name'),
+      },
       title: data.get('title'),
       content: data.get('content'),
     };
@@ -59,7 +62,7 @@ export default class extends Component {
           <form onSubmit={this.handleCreate} validate="true">
             <section className="modal-card-body">
               {isLoading && (
-                <progress className="progress is-primary" max="100">
+                <progress className="progress is-small is-primary" max="100">
                   100%
                 </progress>
               )}

@@ -96,7 +96,7 @@ export default class extends Component {
           <form onSubmit={this.handleEdit} validate="true">
             <section className="modal-card-body">
               {isLoading && (
-                <progress className="progress is-primary" max="100">
+                <progress className="progress is-small is-primary" max="100">
                   100%
                 </progress>
               )}
