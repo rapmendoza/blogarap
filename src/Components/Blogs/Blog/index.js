@@ -3,7 +3,13 @@ import Button from './Button';
 
 export default class extends Component {
   render() {
-    const { blog, handleToggleEdit, handleToggleDelete } = this.props;
+    const {
+      blog,
+      handleToggleEdit,
+      handleToggleDelete,
+      isLoggedIn,
+    } = this.props;
+    const canEdit = sessionStorage.getItem('id') === blog.author.id;
 
     return (
       <div className="tile is-ancestor">
@@ -11,14 +17,16 @@ export default class extends Component {
           <article className="tile is-child box">
             <div className="level is-mobile">
               <p className="level-left title has-text-black">{blog.title}</p>
-              <div className="level-right">
-                <Button color="is-info" toggle={handleToggleEdit}>
-                  Edit
-                </Button>
-                <Button color="is-danger" toggle={handleToggleDelete}>
-                  Delete
-                </Button>
-              </div>
+              {isLoggedIn && canEdit && (
+                <div className="level-right">
+                  <Button color="is-info" toggle={handleToggleEdit}>
+                    Edit
+                  </Button>
+                  <Button color="is-danger" toggle={handleToggleDelete}>
+                    Delete
+                  </Button>
+                </div>
+              )}
             </div>
 
             <p className="subtitle has-text-dark">by {blog.author.name}</p>

@@ -116,6 +116,7 @@ export default class extends Component {
                 key={blog.id}
                 handleToggleEdit={() => this.handleToggleEdit(blog.id)}
                 handleToggleDelete={() => this.handleToggleDelete(blog.id)}
+                isLoggedIn={isLoggedIn}
               />
             ))}
 
