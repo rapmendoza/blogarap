@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Button from './Button';
 
 export default class extends Component {
@@ -23,7 +24,7 @@ export default class extends Component {
       handleToggleDelete,
       isLoggedIn,
     } = this.props;
-    const canEdit = sessionStorage.getItem('id') === blog.author.id;
+    const canEdit = parseInt(sessionStorage.getItem('id')) === blog.author.id;
 
     return (
       <div className="tile is-ancestor">
@@ -37,9 +38,9 @@ export default class extends Component {
                 onMouseLeave={this.handleMouseLeave}
               >
                 <div className="level is-mobile mb-1">
-                  <p className="level-left title has-text-black">
+                  <h2 className="level-left has-text-black has-text-weight-semibold is-size-3">
                     {blog.title}
-                  </p>
+                  </h2>
 
                   {isLoggedIn && canEdit && (
                     <div className="level-right">
@@ -54,11 +55,26 @@ export default class extends Component {
                 </div>
 
                 <p className="subtitle has-text-grey is-italic is-size-6 is-capitalized">
-                  by {blog.author.name}
+                  by{' '}
+                  <span className="has-text-weight-semibold">
+                    {blog.author.name}
+                  </span>
                 </p>
 
                 <div className="content">
-                  <p style={{ whiteSpace: 'pre-wrap' }}>{blog.content}</p>
+                  <p
+                    style={{
+                      whiteSpace: 'pre-wrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                    }}
+                  >
+                    {blog.content}
+                  </p>
+                  <Link to={`/blogs/${blog.id}`}>Continue Reading</Link>
                 </div>
               </article>
             </div>

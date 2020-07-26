@@ -47,7 +47,10 @@ export default class extends Component {
 
     data = {
       id: id,
-      author: data.get('author'),
+      author: {
+        id: sessionStorage.getItem('id'),
+        name: sessionStorage.getItem('name'),
+      },
       title: data.get('title'),
       content: data.get('content'),
     };

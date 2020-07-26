@@ -84,7 +84,7 @@ export default class extends Component {
           isLoggedIn={isLoggedIn}
           handleLogoutState={this.handleLogoutState}
         />
-        <section className="section is-loading">
+        <section className="section">
           <div className="container">
             {isLoading && (
               <progress className="progress is-small is-primary" max="100">
