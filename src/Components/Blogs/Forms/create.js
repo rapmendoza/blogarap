@@ -12,7 +12,7 @@ export default class extends Component {
 
     data = {
       author: {
-        id: sessionStorage.getItem('id'),
+        id: parseInt(sessionStorage.getItem('id')),
         name: sessionStorage.getItem('name'),
       },
       title: data.get('title'),

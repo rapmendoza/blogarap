@@ -47,19 +47,15 @@ export default class extends Component {
         <div className="hero is-dark is-fullheight is-bold">
           <Nav />
           <div className="hero-body">
-            {isLoading ? (
-              <progress className="progress is-small is-primary" max="100">
-                100%
-              </progress>
-            ) : (
-              <div>
+            <div className="container">
+              {isLoading ? (
+                <progress className="progress is-small is-primary" max="100">
+                  100%
+                </progress>
+              ) : (
                 <section className="section">
-                  <div className="columns">
-                    <div
-                      className="column
-                    is-three-fifths-desktop is-offset-one-fifth-desktop
-                    is-half-widescreen is-offset-one-quarter-widescreen"
-                    >
+                  <div className="columns is-mobile">
+                    <div className="column is-half-desktop is-offset-one-quarter-desktop">
                       <h1 className="title">{blog.title}</h1>
                       <h2 className="subtitle has-text-grey-light is-italic is-size-6 is-capitalized">
                         by{' '}
@@ -75,16 +71,6 @@ export default class extends Component {
                       >
                         {blog.content}
                       </p>
-                    </div>
-                  </div>
-                </section>
-                <section className="section">
-                  <div className="columns">
-                    <div
-                      className="column
-                    is-three-fifths-desktop is-offset-one-fifth-desktop
-                    is-half-widescreen is-offset-one-quarter-widescreen"
-                    >
                       <Link
                         to="/blogs"
                         className="button is-light is-outlined mt-6"
@@ -94,8 +80,8 @@ export default class extends Component {
                     </div>
                   </div>
                 </section>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
