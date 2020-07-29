@@ -1,18 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import Nav from '../Nav';
 
-export default class extends Component {
-  state = {
-    isLoading: false,
-    redirect: false,
-    isUsernameTaken: false,
-  };
+export default () => {
+  const [isLoading, setIsLoading] = useState(false),
+    [redirect, setRedirect] = useState(false),
+    [isUsernameTaken, setIsUsernameTaken] = useState(false);
 
-  handleSubmit = async event => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    this.setState({ isLoading: true });
+    setIsLoading(true);
     let data = new FormData(event.target);
 
     data = {
@@ -21,10 +19,10 @@ export default class extends Component {
       password: data.get('password'),
     };
 
-    this.checkUser(data);
+    checkUser(data);
   };
 
-  checkUser(data) {
+  const checkUser = data => {
     const { username } = data;
 
     fetch(`https://blogarap-api.herokuapp.com/users?username=${username}`, {
@@ -36,16 +34,17 @@ export default class extends Component {
       .then(response => response.json())
       .then(user => {
         if (user.length) {
-          this.setState({ isUsernameTaken: true, isLoading: false });
+          setIsUsernameTaken(true);
+          setIsLoading(false);
           return false;
         } else {
-          this.setState({ isUsernameTaken: false, isLoading: false });
-          this.createUser(data);
+          setIsUsernameTaken(false);
+          createUser(data);
         }
       });
-  }
+  };
 
-  createUser(data) {
+  const createUser = data => {
     fetch(`https://blogarap-api.herokuapp.com/users`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -57,79 +56,76 @@ export default class extends Component {
       .then(user => {
         sessionStorage.setItem('id', user.id);
         sessionStorage.setItem('name', user.name);
-        this.setState({ isLoading: false, redirect: true });
+        setIsLoading(false);
+        setRedirect(true);
       });
-  }
+  };
 
-  render() {
-    const { isLoading, redirect, isUsernameTaken } = this.state;
-
-    return (
-      <div className="hero is-dark is-fullheight is-bold">
-        <Nav />
-        {redirect && <Redirect to="/blogs" />}
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns">
-              <div className="column is-one-third">
-                <h1 className="title">Sign Up</h1>
-                <form validate="true" onSubmit={this.handleSubmit}>
-                  <div className="field">
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="text"
-                        placeholder="Name"
-                        name="name"
-                        required
-                      />
-                    </div>
+  return (
+    <div className="hero is-dark is-fullheight is-bold">
+      <Nav />
+      {redirect && <Redirect to="/blogs" />}
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns">
+            <div className="column is-one-third">
+              <h1 className="title">Sign Up</h1>
+              <form validate="true" onSubmit={handleSubmit}>
+                <div className="field">
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      required
+                    />
                   </div>
-                  <div className="field">
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="text"
-                        placeholder="Username"
-                        name="username"
-                        required
-                      />
-                      {isUsernameTaken && (
-                        <p className="help is-danger">
-                          Username is already taken
-                        </p>
-                      )}
-                    </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="text"
+                      placeholder="Username"
+                      name="username"
+                      required
+                    />
+                    {isUsernameTaken && (
+                      <p className="help is-danger">
+                        Username is already taken
+                      </p>
+                    )}
                   </div>
-                  <div className="field">
-                    <div className="control">
-                      <input
-                        className="input"
-                        type="password"
-                        placeholder="Password"
-                        name="password"
-                        required
-                      />
-                    </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <input
+                      className="input"
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      required
+                    />
                   </div>
-                  <div className="field">
-                    <div className="control">
-                      <button
-                        className={`button is-success${
-                          isLoading ? ' is-loading' : ''
-                        }`}
-                        type="submit"
-                      >
-                        Sign up
-                      </button>
-                    </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <button
+                      className={`button is-success${
+                        isLoading ? ' is-loading' : ''
+                      }`}
+                      type="submit"
+                    >
+                      Sign up
+                    </button>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

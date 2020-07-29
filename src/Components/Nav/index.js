@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default () => {
+export default props => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +41,7 @@ export default () => {
     setTimeout(() => {
       setIsLoading(false);
       setIsLoggedIn(false);
-      this.props.handleLogout();
+      props.handleLogout();
       sessionStorage.clear();
     }, 1000);
   };
