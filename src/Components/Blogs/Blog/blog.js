@@ -55,7 +55,7 @@ export default class extends Component {
               ) : (
                 <section className="section">
                   <div className="columns is-mobile">
-                    <div className="column is-half-desktop is-offset-one-quarter-desktop">
+                    <div className="column is-three-fifths-desktop is-offset-one-fifth-desktop">
                       <h1 className="title">{blog.title}</h1>
                       <h2 className="subtitle has-text-grey-light is-italic is-size-6 is-capitalized">
                         by{' '}

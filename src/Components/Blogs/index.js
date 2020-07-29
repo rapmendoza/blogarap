@@ -1,85 +1,79 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Nav from '../Nav';
+import {
+  toggleLoad,
+  initializeBlogs,
+  toggleCreate,
+  toggleEdit,
+  toggleDelete,
+  logIn,
+  logOut,
+  isLoading,
+  blogs,
+  displayCreate,
+  displayEdit,
+  displayDelete,
+  isLoggedIn,
+  selectedBlog,
+} from './blogsSlice';
 import Blog from './Blog';
+import Nav from '../Nav';
 import CreateModal from './Forms/create';
 import EditModal from './Forms/edit';
 import DeleteModal from './Forms/delete';
 
 export default () => {
-  const [blogs, setBlogs] = useState([]),
-    [displayCreate, setDisplayCreate] = useState(false),
-    [displayEdit, setDisplayEdit] = useState(false),
-    [displayDelete, setDisplayDelete] = useState(false),
-    [isLoading, setIsLoading] = useState(true),
-    [selectedBlog, setSelectedBlog] = useState(null),
-    [isLoggedIn, setIsLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const loadingState = useSelector(isLoading);
+  const blogsState = useSelector(blogs);
+  const createState = useSelector(displayCreate);
+  const editState = useSelector(displayEdit);
+  const deleteState = useSelector(displayDelete);
+  const loggedInState = useSelector(isLoggedIn);
+  const selectedBlogState = useSelector(selectedBlog);
 
   useEffect(() => {
-    getAllData();
+    getAllData(1500);
     checkLoggedInUser();
   }, []);
 
-  const getAllData = (delay = 1500) => {
+  const getAllData = (delay = 0) => {
+    dispatch(toggleLoad());
+
     fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
       .then(response => response.json())
       .then(blogs => {
         setTimeout(() => {
-          setBlogs(blogs);
-          setIsLoading(false);
+          dispatch(initializeBlogs(blogs));
+          dispatch(toggleLoad());
         }, delay);
       });
   };
 
-  const handleToggleCreate = () => {
-    setDisplayCreate(!displayCreate);
-    setSelectedBlog(null);
-  };
-
-  const handleToggleEdit = id => {
-    setDisplayEdit(!displayEdit);
-    setSelectedBlog(id);
-  };
-
-  const handleToggleDelete = id => {
-    setDisplayDelete(!displayDelete);
-    setSelectedBlog(id);
-  };
-
-  const handleDisplayUpdate = () => {
-    getAllData(0);
-  };
-
-  const handleLogoutState = () => {
-    setIsLoggedIn(false);
-  };
-
   const checkLoggedInUser = () => {
     if (sessionStorage.getItem('name')) {
-      setIsLoggedIn(true);
+      dispatch(logIn());
     }
   };
 
   return (
     <div className="hero is-dark is-fullheight is-bold">
-      <Nav isLoggedIn={isLoggedIn} handleLogoutState={handleLogoutState} />
+      <Nav isLoggedIn={loggedInState} handleLogout={() => dispatch(logOut())} />
+
       <section className="section">
         <div className="container">
-          {isLoading ? (
-            <progress className="progress is-small is-primary" max="100">
-              100%
-            </progress>
-          ) : (
+          {!loadingState && (
             <div className="level is-mobile">
               <div className="level-left">
                 <h1 className="title">Blogs</h1>
               </div>
 
-              {isLoggedIn && (
+              {loggedInState && (
                 <div className="level-right">
                   <button
                     className="button is-primary is-outlined"
-                    onClick={handleToggleCreate}
+                    onClick={() => dispatch(toggleCreate())}
                   >
                     New
                   </button>
@@ -88,40 +82,46 @@ export default () => {
             </div>
           )}
 
-          {!isLoading &&
-            blogs.map(blog => (
+          {!loadingState &&
+            blogsState.map(blog => (
               <Blog
                 blog={blog}
                 key={blog.id}
-                handleToggleEdit={() => handleToggleEdit(blog.id)}
-                handleToggleDelete={() => handleToggleDelete(blog.id)}
-                isLoggedIn={isLoggedIn}
+                handleToggleEdit={() => dispatch(toggleEdit(blog.id))}
+                handleToggleDelete={() => dispatch(toggleDelete(blog.id))}
+                isLoggedIn={loggedInState}
               />
             ))}
 
           <CreateModal
-            active={displayCreate}
-            onToggle={handleToggleCreate}
-            handleResponse={handleDisplayUpdate}
+            active={createState}
+            onToggle={() => dispatch(toggleCreate())}
+            handleResponse={() => getAllData()}
           />
 
-          {displayEdit && (
+          {editState && (
             <EditModal
-              active={displayEdit}
-              onToggle={handleToggleEdit}
-              handleResponse={handleDisplayUpdate}
-              id={selectedBlog}
+              active={editState}
+              onToggle={() => dispatch(toggleEdit())}
+              handleResponse={() => getAllData()}
+              id={selectedBlogState}
             />
           )}
 
           <DeleteModal
-            active={displayDelete}
-            onToggle={handleToggleDelete}
-            handleResponse={handleDisplayUpdate}
-            id={selectedBlog}
+            active={deleteState}
+            onToggle={() => dispatch(toggleDelete(selectedBlogState))}
+            handleResponse={() => getAllData()}
+            id={selectedBlogState}
           />
         </div>
       </section>
+
+      {loadingState && (
+        <progress className="progress is-small is-primary" max="100">
+          100%
+        </progress>
+      )}
     </div>
   );
 };
