@@ -1,18 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export default class extends Component {
-  state = {
-    isLoggedIn: false,
-    isLoading: false,
-  };
+export default () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  componentDidMount() {
-    this.navBarHandler();
-    this.checkUser();
-  }
+  useEffect(() => {
+    navBarHandler();
+    checkUser();
+  }, []);
 
-  navBarHandler() {
+  const navBarHandler = () => {
     const $navbarBurgers = Array.prototype.slice.call(
       document.querySelectorAll('.navbar-burger'),
       0
@@ -29,83 +27,78 @@ export default class extends Component {
         });
       });
     }
-  }
+  };
 
-  checkUser() {
+  const checkUser = () => {
     if (sessionStorage.getItem('id')) {
-      this.setState({ isLoggedIn: true });
+      setIsLoggedIn(true);
     }
-  }
+  };
 
-  handleLogout = () => {
-    this.setState({ isLoading: true });
+  const handleLogout = () => {
+    setIsLoading(true);
 
     setTimeout(() => {
-      this.setState({ isLoggedIn: false, isLoading: false });
+      setIsLoading(false);
+      setIsLoggedIn(false);
       this.props.handleLogout();
       sessionStorage.clear();
     }, 1000);
   };
 
-  render() {
-    const { isLoggedIn, isLoading } = this.state;
-    const name = sessionStorage.getItem('name');
+  const name = sessionStorage.getItem('name');
 
-    return (
-      <nav className="navbar is-black">
-        <div className="navbar-brand">
-          <a
-            className="navbar-item is-size-4 has-text-weight-semibold"
-            href="/"
-          >
-            Blogarap
-          </a>
+  return (
+    <nav className="navbar is-black">
+      <div className="navbar-brand">
+        <a className="navbar-item is-size-4 has-text-weight-semibold" href="/">
+          Blogarap
+        </a>
 
-          <div className="navbar-burger burger" data-target="myBurger">
-            <span></span>
-            <span></span>
-            <span></span>
+        <div className="navbar-burger burger" data-target="myBurger">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div id="myBurger" className="navbar-menu">
+        {isLoggedIn ? (
+          <div className="navbar-end">
+            <h1 className="navbar-item">
+              Welcome
+              <span className="is-capitalized has-text-weight-bold">
+                {`, ${name}`}
+              </span>
+            </h1>
+            <div className="navbar-item">
+              <div className="buttons">
+                <button
+                  className={`button is-light is-outlined${
+                    isLoading ? ' is-loading' : ''
+                  }`}
+                  onClick={handleLogout}
+                >
+                  Log out
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div id="myBurger" className="navbar-menu">
-          {isLoggedIn ? (
-            <div className="navbar-end">
-              <h1 className="navbar-item">
-                Welcome
-                <span className="is-capitalized has-text-weight-bold">
-                  {`, ${name}`}
-                </span>
-              </h1>
-              <div className="navbar-item">
-                <div className="buttons">
-                  <button
-                    className={`button is-light is-outlined${
-                      isLoading ? ' is-loading' : ''
-                    }`}
-                    onClick={this.handleLogout}
-                  >
-                    Log out
-                  </button>
-                </div>
+        ) : (
+          <div className="navbar-end">
+            <div className="navbar-item">
+              <div className="buttons">
+                <Link to="/signup" className="button is-light is-outlined">
+                  Sign up
+                </Link>
+                <Link to="/login" className="button is-light is-outlined">
+                  Log in
+                </Link>
               </div>
             </div>
-          ) : (
-            <div className="navbar-end">
-              <div className="navbar-item">
-                <div className="buttons">
-                  <Link to="/signup" className="button is-light is-outlined">
-                    Sign up
-                  </Link>
-                  <Link to="/login" className="button is-light is-outlined">
-                    Log in
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
-    );
-  }
-}
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
