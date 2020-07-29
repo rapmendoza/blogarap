@@ -24,21 +24,21 @@ import EditModal from './Forms/edit';
 import DeleteModal from './Forms/delete';
 
 export default () => {
-  const dispatch = useDispatch();
-  const loadingState = useSelector(isLoading);
-  const blogsState = useSelector(blogs);
-  const createState = useSelector(displayCreate);
-  const editState = useSelector(displayEdit);
-  const deleteState = useSelector(displayDelete);
-  const loggedInState = useSelector(isLoggedIn);
-  const selectedBlogState = useSelector(selectedBlog);
+  const dispatch = useDispatch(),
+    loadingState = useSelector(isLoading),
+    blogsState = useSelector(blogs),
+    createState = useSelector(displayCreate),
+    editState = useSelector(displayEdit),
+    deleteState = useSelector(displayDelete),
+    loggedInState = useSelector(isLoggedIn),
+    selectedBlogState = useSelector(selectedBlog);
 
   useEffect(() => {
-    getAllData(1500);
+    getBlogs(1500);
     checkLoggedInUser();
   }, []);
 
-  const getAllData = (delay = 0) => {
+  const getBlogs = (delay = 0) => {
     dispatch(toggleLoad());
 
     fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
@@ -95,15 +95,15 @@ export default () => {
 
           <CreateModal
             active={createState}
-            onToggle={() => dispatch(toggleCreate())}
-            handleResponse={() => getAllData()}
+            toggle={() => dispatch(toggleCreate())}
+            handleResponse={() => getBlogs()}
           />
 
           {editState && (
             <EditModal
               active={editState}
               onToggle={() => dispatch(toggleEdit())}
-              handleResponse={() => getAllData()}
+              handleResponse={() => getBlogs()}
               id={selectedBlogState}
             />
           )}
@@ -111,7 +111,7 @@ export default () => {
           <DeleteModal
             active={deleteState}
             onToggle={() => dispatch(toggleDelete(selectedBlogState))}
-            handleResponse={() => getAllData()}
+            handleResponse={() => getBlogs()}
             id={selectedBlogState}
           />
         </div>

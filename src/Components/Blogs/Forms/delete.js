@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-export default class extends Component {
-  state = {
-    isLoading: false,
-  };
+export default props => {
+  const [isLoading, setIsLoading] = useState(false);
 
-  handleDelete = event => {
+  const handleDelete = event => {
     event.preventDefault();
-    this.setState({ isLoading: true });
-    const { id } = this.props;
+    setIsLoading(true);
+    const { id } = props;
 
     fetch(`https://blogarap-api.herokuapp.com/blogs/${id}`, {
       method: 'DELETE',
@@ -16,50 +14,46 @@ export default class extends Component {
       .then(response => response.json())
       .then(() => {
         setTimeout(() => {
-          this.props.handleResponse();
-          this.setState({ isLoading: false });
-          this.props.onToggle();
+          props.handleResponse();
+          setIsLoading(false);
+          props.onToggle();
         }, 1000);
       });
   };
 
-  render() {
-    const { active, onToggle } = this.props;
-    const { isLoading } = this.state;
+  const { active, onToggle } = props;
 
-    return (
-      <div className={`modal${active ? ' is-active' : ''}`}>
-        <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">
-              Are you sure you want to delete this post?
-            </p>
-          </header>
-          <form onSubmit={this.handleDelete}>
-            <section className="modal-card-body">
-              <div className="level is-mobile">
-                <button
-                  className={`level-item button is-danger${
-                    isLoading ? ' is-loading' : ''
-                  }`}
-                  type="submit"
-                  onClick={this.handleLoader}
-                >
-                  Yes
-                </button>
-                <button
-                  className="level-item button"
-                  type="button"
-                  onClick={onToggle}
-                >
-                  No
-                </button>
-              </div>
-            </section>
-          </form>
-        </div>
+  return (
+    <div className={`modal${active ? ' is-active' : ''}`}>
+      <div className="modal-background"></div>
+      <div className="modal-card">
+        <header className="modal-card-head">
+          <p className="modal-card-title">
+            Are you sure you want to delete this post?
+          </p>
+        </header>
+        <form onSubmit={handleDelete}>
+          <section className="modal-card-body">
+            <div className="level is-mobile">
+              <button
+                className={`level-item button is-danger${
+                  isLoading ? ' is-loading' : ''
+                }`}
+                type="submit"
+              >
+                Yes
+              </button>
+              <button
+                className="level-item button"
+                type="button"
+                onClick={onToggle}
+              >
+                No
+              </button>
+            </div>
+          </section>
+        </form>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
