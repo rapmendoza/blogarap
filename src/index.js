@@ -4,8 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './components';
 import store from './app/store';
 
-import 'bulma/css/bulma.css';
 import { Provider } from 'react-redux';
+
+import 'bulma/css/bulma.css';
 
 render(
   <BrowserRouter>

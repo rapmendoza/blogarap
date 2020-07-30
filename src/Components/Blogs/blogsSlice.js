@@ -4,6 +4,7 @@ export const blogsSlice = createSlice({
   name: 'blogs',
   initialState: {
     blogs: [],
+    error: false,
     isLoading: false,
     displayCreate: false,
     displayEdit: false,
@@ -12,6 +13,20 @@ export const blogsSlice = createSlice({
     selectedBlog: null,
   },
   reducers: {
+    fetch(state) {
+      state.isLoading = true;
+      state.error = false;
+      state.blogs = [];
+    },
+    fetchbyid(state, action) {},
+    fetchSuccess(state, action) {
+      state.blogs = action.payload.data;
+      state.isLoading = false;
+    },
+    fetchFailure(state, action) {
+      state.error = action.payload.error;
+      state.isLoading = false;
+    },
     toggleLoad: state => {
       state.isLoading = !state.isLoading;
     },
@@ -39,22 +54,7 @@ export const blogsSlice = createSlice({
   },
 });
 
-export const {
-  toggleLoad,
-  initializeBlogs,
-  toggleCreate,
-  toggleEdit,
-  toggleDelete,
-  logIn,
-  logOut,
-} = blogsSlice.actions;
+export const states = state =>
+  state[blogsSlice.name] || blogsSlice.initialState;
 
-export const isLoading = state => state.blogs.isLoading;
-export const blogs = state => state.blogs.blogs;
-export const displayCreate = state => state.blogs.displayCreate;
-export const displayEdit = state => state.blogs.displayEdit;
-export const displayDelete = state => state.blogs.displayDelete;
-export const isLoggedIn = state => state.blogs.isLoggedIn;
-export const selectedBlog = state => state.blogs.selectedBlog;
-
-export default blogsSlice.reducer;
+export const { name, actions, reducer } = blogsSlice;

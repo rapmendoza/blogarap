@@ -1,79 +1,48 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  toggleLoad,
-  initializeBlogs,
-  toggleCreate,
-  toggleEdit,
-  toggleDelete,
-  logIn,
-  logOut,
-  isLoading,
-  blogs,
-  displayCreate,
-  displayEdit,
-  displayDelete,
-  isLoggedIn,
-  selectedBlog,
-} from './blogsSlice';
 import Blog from './Blog';
 import Nav from '../Nav';
 import CreateModal from './Forms/create';
 import EditModal from './Forms/edit';
 import DeleteModal from './Forms/delete';
+import { actions, states } from './blogsSlice';
 
-export default () => {
-  const dispatch = useDispatch(),
-    loadingState = useSelector(isLoading),
-    blogsState = useSelector(blogs),
-    createState = useSelector(displayCreate),
-    editState = useSelector(displayEdit),
-    deleteState = useSelector(displayDelete),
-    loggedInState = useSelector(isLoggedIn),
-    selectedBlogState = useSelector(selectedBlog);
+export default props => {
+  const dispatch = useDispatch();
+  const store = useSelector(states);
 
   useEffect(() => {
-    getBlogs(1500);
+    dispatch(actions.fetch(1500));
     checkLoggedInUser();
   }, []);
 
-  const getBlogs = (delay = 0) => {
-    dispatch(toggleLoad());
-
-    fetch('https://blogarap-api.herokuapp.com/blogs?_sort=id&_order=desc')
-      .then(response => response.json())
-      .then(blogs => {
-        setTimeout(() => {
-          dispatch(initializeBlogs(blogs));
-          dispatch(toggleLoad());
-        }, delay);
-      });
-  };
-
   const checkLoggedInUser = () => {
     if (sessionStorage.getItem('name')) {
-      dispatch(logIn());
+      dispatch(actions.logIn());
     }
   };
 
   return (
     <div className="hero is-dark is-fullheight is-bold">
-      <Nav isLoggedIn={loggedInState} handleLogout={() => dispatch(logOut())} />
+      <Nav
+        isLoggedIn={store.isLoggedIn}
+        handleLogout={() => dispatch(actions.logOut())}
+      />
 
       <section className="section">
         <div className="container">
-          {!loadingState && (
+          {!store.isLoading && (
             <div className="level is-mobile">
               <div className="level-left">
                 <h1 className="title">Blogs</h1>
               </div>
 
-              {loggedInState && (
+              {store.isLoggedIn && (
                 <div className="level-right">
                   <button
                     className="button is-primary is-outlined"
-                    onClick={() => dispatch(toggleCreate())}
+                    onClick={() => dispatch(actions.toggleCreate())}
                   >
                     New
                   </button>
@@ -82,42 +51,46 @@ export default () => {
             </div>
           )}
 
-          {!loadingState &&
-            blogsState.map(blog => (
+          {!store.isLoading &&
+            store.blogs.map(blog => (
               <Blog
                 blog={blog}
                 key={blog.id}
-                handleToggleEdit={() => dispatch(toggleEdit(blog.id))}
-                handleToggleDelete={() => dispatch(toggleDelete(blog.id))}
-                isLoggedIn={loggedInState}
+                handleToggleEdit={() => dispatch(actions.toggleEdit(blog.id))}
+                handleToggleDelete={() =>
+                  dispatch(actions.toggleDelete(blog.id))
+                }
+                isLoggedIn={store.isLoggedIn}
               />
             ))}
 
           <CreateModal
-            active={createState}
-            toggle={() => dispatch(toggleCreate())}
-            handleResponse={() => getBlogs()}
+            active={store.displayCreate}
+            toggle={() => dispatch(actions.toggleCreate())}
+            handleResponse={() => dispatch(actions.fetch(0))}
           />
 
-          {editState && (
+          {store.displayEdit && (
             <EditModal
-              active={editState}
-              onToggle={() => dispatch(toggleEdit())}
-              handleResponse={() => getBlogs()}
-              id={selectedBlogState}
+              active={store.displayEdit}
+              onToggle={() => dispatch(actions.toggleEdit())}
+              handleResponse={() => dispatch(actions.fetch(0))}
+              id={store.selectedBlog}
             />
           )}
 
           <DeleteModal
-            active={deleteState}
-            onToggle={() => dispatch(toggleDelete(selectedBlogState))}
-            handleResponse={() => getBlogs()}
-            id={selectedBlogState}
+            active={store.displayDelete}
+            onToggle={() =>
+              dispatch(actions.toggleDelete(store.selectedBlogState))
+            }
+            handleResponse={() => dispatch(actions.fetch(0))}
+            id={store.selectedBlog}
           />
         </div>
       </section>
 
-      {loadingState && (
+      {store.isLoading && (
         <progress className="progress is-small is-primary" max="100">
           100%
         </progress>
